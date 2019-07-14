@@ -3,7 +3,7 @@ TDD II
 
 ## TODO
 
-[] Invoke test method
+[X] Invoke test method
 [] Invoke setUp first
 [] Invoke tearDown afterward
 [] Invoke tearDown even if test method fails
