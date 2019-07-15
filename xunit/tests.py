@@ -7,9 +7,9 @@ class TestCase:
 
     def run(self, result):
         result.test_started()
-        self.setup()
         method = getattr(self, self.name)
         try:
+            self.setup()
             method()
         except:
             result.test_failed(self.name)
@@ -27,14 +27,15 @@ class TestResult:
         self.run_count = self.run_count + 1
 
     def test_failed(self, method):
-        self.failed_tests.append(f'{method}')
+        self.failed_tests.append(method)
         self.fail_count = self.fail_count + 1
 
     @property
     def summary(self):
         return f'{self.run_count} run, {self.fail_count} failed'
 
-    def failed_summary(self):
+    @property
+    def summary_detail(self):
         if (self.fail_count > 0):
             separator = ''
             if len(self.failed_tests) > 1:
@@ -74,6 +75,17 @@ class WasRun(TestCase):
         self.log = self.log + ' teardown'
 
 
+class WasSetup(TestCase):
+    def setup(self):
+        raise Exception
+
+    def TEST_METHOD(self):
+        pass
+
+    def teardown(self):
+        pass
+
+
 class TestCaseTest(TestCase):
     def setup(self):
         self.result = TestResult()
@@ -82,6 +94,11 @@ class TestCaseTest(TestCase):
         test = WasRun('TEST_METHOD')
         test.run(self.result)
         assert test.log == 'setup TEST_METHOD teardown'
+
+    def test_catch_setup_error(self):
+        test = WasSetup('TEST_METHOD')
+        test.run(self.result)
+        assert self.result.summary == '1 run, 1 failed'
 
     def test_teardown_after_fail(self):
         test = WasRun('TEST_BROKEN_METHOD')
@@ -117,6 +134,7 @@ class Test:
     def run():
         suite = TestSuite()
         suite.add(TestCaseTest('test_template_method'))
+        suite.add(TestCaseTest('test_catch_setup_error'))
         suite.add(TestCaseTest('test_teardown_after_fail'))
         suite.add(TestCaseTest('test_result'))
         suite.add(TestCaseTest('test_failed_result'))
@@ -124,4 +142,4 @@ class Test:
         result = TestResult()
         suite.run(result)
         print(result.summary)
-        print(result.failed_summary())
+        print(result.summary_detail)

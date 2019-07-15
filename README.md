@@ -10,7 +10,7 @@
 - [X] Report collected results
 - [X] Log string methods called in WasRun
 - [X] Report failed tests
-- [] Catch and report setup errors
+- [X] Catch and report setup errors
 - [] Create TestSuite from TestCase class
 
 ### Notes
