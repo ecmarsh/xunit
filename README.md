@@ -3,7 +3,7 @@
 ## TODO
 
 - [X] Invoke test method
-- [] Invoke setUp first
+- [X] Invoke test setup first
 - [] Invoke tearDown afterward
 - [] Invoke tearDown even if test method fails
 - [] Run multiple tests
@@ -11,7 +11,7 @@
 
 ### Notes
 
-Activate virtual environment (posix - zsh): `$ source venv/bin/activate`
+Activate virtual environment (posix - zsh/bash): `$ source venv/bin/activate`
 
 Execute app: `python -m xunit`
 
