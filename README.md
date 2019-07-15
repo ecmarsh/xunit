@@ -8,6 +8,7 @@
 - [] Invoke tearDown even if test method fails
 - [] Run multiple tests
 - [] Report collected results
+- [X] Log string methods called in WasRun
 
 ### Notes
 

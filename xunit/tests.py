@@ -9,34 +9,37 @@ class TestCase:
         self.setup()
         method = getattr(self, self.name)
         method()
+        self.teardown()
 
 
 class WasRun(TestCase):
     def __init__(self, name):
-        TestCase.__init__(self, name)
+        super().__init__(name)
 
-    def test_method(self):
-        self.was_run = 1
+    def TEST_METHOD(self):
+        self.log = self.log + ' TEST_METHOD'
 
     def setup(self):
-        self.was_run = None
-        self.was_setup = 1
+        self.log = 'setup'
+
+    def teardown(self):
+        self.log = self.log + ' teardown '
 
 
 class TestCaseTest(TestCase):
-    def setup(self):
-        self.test = WasRun('test_method')
+    def test_template_method(self):
+        test = WasRun('TEST_METHOD')
+        test.run()
+        assert(
+            test.log == 'setup TEST_METHOD teardown '), f'Log is "{test.log}"'
 
-    def test_running(self):
-        self.test.run()
-        assert(self.test.was_run), 'test_method was not run'
-
-    def test_setup(self):
-        self.test.run()
-        assert(self.test.was_setup), f'test_method was not setup'
+    def teardown(self):
+        pass
 
 
 class Test:
+    def test_started():
+        print('Test started')
+
     def run():
-        TestCaseTest('test_running').run()
-        TestCaseTest('test_setup').run()
+        TestCaseTest('test_template_method').run()
