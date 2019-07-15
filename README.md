@@ -15,7 +15,7 @@
 
 ### Notes
 
-Activate virtual environment (posix - zsh/bash): `$ source venv/bin/activate`
+Activate virtual environment (posix - zsh/bash): `source venv/bin/activate`
 
 Execute app: `python -m xunit`
 
