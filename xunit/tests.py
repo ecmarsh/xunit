@@ -1,8 +1,29 @@
+import re
+
+
+class TestSuite:
+    def __init__(self):
+        self.tests = []
+
+    def add(self, test):
+        self.tests.append(test)
+
+    def run(self, result):
+        for test in self.tests:
+            test.run(result)
+
+
 class TestCase:
     def __init__(self, name):
         self.name = name
 
+    suite = TestSuite()
+
     def setup(self):
+        """Default if a subclass does not shadow"""
+        self.result = TestResult()
+
+    def teardown(self):
         pass
 
     def run(self, result):
@@ -37,24 +58,24 @@ class TestResult:
     @property
     def summary_detail(self):
         if (self.fail_count > 0):
-            separator = ''
-            if len(self.failed_tests) > 1:
-                separator = ','
-            return f'Failed tests: {separator.join(self.failed_tests)}'
+            return f'Failed: {" ".join(self.failed_tests)}'
+        return 'All tests pass ✅'
 
-        return 'All tests passed ✅'
+    def report(self):
+        print(self.summary)
+        print(self.summary_detail)
 
 
-class TestSuite:
-    def __init__(self):
-        self.tests = []
+class MetaSuite(type):
+    def __new__(meta, name, bases, class_dict):
+        suite = bases[0].suite
+        Cls = type.__new__(meta, name, bases, class_dict)
 
-    def add(self, test):
-        self.tests.append(test)
+        for key in class_dict:
+            if len(re.findall('^test', key)):
+                suite.add(Cls(key))
 
-    def run(self, result):
-        for test in self.tests:
-            test.run(result)
+        return Cls
 
 
 class WasRun(TestCase):
@@ -76,17 +97,19 @@ class WasRun(TestCase):
 
 
 class WasSetup(TestCase):
+    """
+    Sole purpose is for test case that
+    ensures error in `setup()` is caught
+    """
+
     def setup(self):
         raise Exception
 
-    def TEST_METHOD(self):
-        pass
-
-    def teardown(self):
+    def other_method(self):
         pass
 
 
-class TestCaseTest(TestCase):
+class TestCaseTest(TestCase, metaclass=MetaSuite):
     def setup(self):
         self.result = TestResult()
 
@@ -96,7 +119,7 @@ class TestCaseTest(TestCase):
         assert test.log == 'setup TEST_METHOD teardown'
 
     def test_catch_setup_error(self):
-        test = WasSetup('TEST_METHOD')
+        test = WasSetup('other_method')
         test.run(self.result)
         assert self.result.summary == '1 run, 1 failed'
 
@@ -115,31 +138,21 @@ class TestCaseTest(TestCase):
         test.run(self.result)
         assert self.result.summary == '1 run, 1 failed'
 
+    def test_fail_result_detail(self):
+        test = WasRun('TEST_BROKEN_METHOD')
+        test.run(self.result)
+        assert self.result.summary_detail == 'Failed: TEST_BROKEN_METHOD'
+
     def test_test_suite(self):
         suite = TestSuite()
         suite.add(WasRun('TEST_METHOD'))
         suite.add(WasRun('TEST_BROKEN_METHOD'))
-
-        # Collecting Parameter
         suite.run(self.result)
-
-        assert self.result.summary == '2 run, 1 failed', \
-            f'test_fail_format: {self.result.summary}'
-
-    def teardown(self):
-        pass
+        assert self.result.summary == '2 run, 1 failed'
 
 
 class Test:
-    def run():
-        suite = TestSuite()
-        suite.add(TestCaseTest('test_template_method'))
-        suite.add(TestCaseTest('test_catch_setup_error'))
-        suite.add(TestCaseTest('test_teardown_after_fail'))
-        suite.add(TestCaseTest('test_result'))
-        suite.add(TestCaseTest('test_failed_result'))
-        suite.add(TestCaseTest('test_test_suite'))
+    def run(Cls):
         result = TestResult()
-        suite.run(result)
-        print(result.summary)
-        print(result.summary_detail)
+        Cls.suite.run(result)
+        result.report()
