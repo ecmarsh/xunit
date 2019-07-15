@@ -1,4 +1,5 @@
 import sys
+import argparse
 
 from .tests import Test
 
@@ -7,7 +8,14 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    Test.run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--test', dest='test', action='store_true',
+                        help='run tests')
+
+    args = parser.parse_args()
+
+    if args.test:
+        Test.run()
 
 
 if __name__ == '__main__':

@@ -19,7 +19,7 @@ class WasRun(TestCase):
 class TestCaseTest(TestCase):
     def test_running(self):
         test = WasRun('test_method')
-        assert(not test.was_run), 'Test method was run'
+        assert(test.was_run), 'Test method was run'
         test.run()
         assert(test.was_run), 'Test method was not run'
 
