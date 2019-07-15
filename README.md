@@ -4,11 +4,14 @@
 
 - [X] Invoke test method
 - [X] Invoke test setup first
-- [] Invoke tearDown afterward
-- [] Invoke tearDown even if test method fails
-- [] Run multiple tests
-- [] Report collected results
+- [X] Invoke tearDown afterward
+- [X] Invoke tearDown even if test method fails
+- [X] Run multiple tests
+- [X] Report collected results
 - [X] Log string methods called in WasRun
+- [X] Report failed tests
+- [] Catch and report setup errors
+- [] Create TestSuite from TestCase class
 
 ### Notes
 
