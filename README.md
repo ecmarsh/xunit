@@ -9,7 +9,9 @@ If adding non-test items to xunit folder, run app with `python -m xunit`.
 To add tests, add to `tests.py` ensuring to inherit the TestCase and registering the suite with the metaclass. All methods beginning with `test` will be run. You can perform setup and teardown by overriding the TestCase default `setup()` and `teardown()` methods.
 
 ```python
-class NameForTestSuite(TestCase, metaclass='Suite') {
+# tests.py
+
+class NameForTestSuite(TestCase, metaclass=Suite):
     def setup(self):
         # optional setup routine
 
@@ -19,7 +21,6 @@ class NameForTestSuite(TestCase, metaclass='Suite') {
 
     def teardown(self):
         # optional teardown routine
-}
 ```
 
 All tests in `tests.py` can then be run adding the test flag: `python -m xunit -t` or `--test`.
