@@ -1,5 +1,8 @@
 # xUnit - TDD II
 
+Use native assertions to implement TDD while building a testing framework.
+
+
 ## TODO
 
 - [X] Invoke test method

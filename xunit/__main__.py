@@ -1,7 +1,8 @@
 import sys
 import argparse
 
-from .tests import Test, TestCaseTest
+from .suite import Test
+from .tests import *
 
 
 def main(args=None):
@@ -15,7 +16,7 @@ def main(args=None):
     args = parser.parse_args()
 
     if args.test:
-        Test.run(TestCaseTest)
+        Test.run()
 
 
 if __name__ == '__main__':
