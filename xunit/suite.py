@@ -69,7 +69,7 @@ class TestResult:
 class Test:
     suites = {}
 
-    def addSuite(k, v):
+    def add_suite(k, v):
         Test.suites[k] = v
 
     def run():
@@ -102,6 +102,6 @@ class Suite(type):
             if len(re.findall('^test', key)):
                 suite.add(Cls(key))
 
-        Test.addSuite(name, suite)
+        Test.add_suite(name, suite)
 
         return Cls
