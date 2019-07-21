@@ -2,7 +2,7 @@ import sys
 import argparse
 
 from .suite import Test
-from .tests import *
+from .test import *
 
 
 def main(args=None):

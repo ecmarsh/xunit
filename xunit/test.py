@@ -1,7 +1,7 @@
 # The test for the test suite itself
 
 from .suite import TestCase, TestResult, TestSuite, Suite
-from .mocks import WasRun, WasSetup
+from .cases import WasRun, WasSetup
 
 
 class TestCaseTest(TestCase, metaclass=Suite):
